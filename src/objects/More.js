@@ -51,7 +51,7 @@ const More = class More {
     const ids = getNextIdSlice(this.children, startIndex, options.amount, MAX_API_MORECHILDREN_AMOUNT);
     return this._r._get({
       uri: 'api/morechildren',
-      qs: {api_type, children: ids.join(','), link_id: this.link_id || this.parent_id}
+      qs: {sort: 'old', api_type, children: ids.join(','), link_id: this.link_id || this.parent_id}
     }).tap(handleJsonErrors)
       .then(res => res.json.data.things)
       .map(addEmptyRepliesListing)
