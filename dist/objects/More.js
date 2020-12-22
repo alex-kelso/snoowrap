@@ -90,6 +90,7 @@ var More = class More {
     return this._r._get({
       uri: 'api/morechildren',
       qs: {
+        depth: 1,
         sort: 'old',
         api_type,
         children: ids.join(','),
