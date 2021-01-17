@@ -152,6 +152,7 @@ const snoowrap = class snoowrap {
     clientId = requiredArg('clientId'),
     scope = requiredArg('scope'),
     redirectUri = requiredArg('redirectUri'),
+    mobile = requiredArg('mobile'),
     permanent = true,
     state = '_',
     endpointDomain = 'reddit.com'
@@ -159,15 +160,29 @@ const snoowrap = class snoowrap {
     if (!(Array.isArray(scope) && scope.length && scope.every(scopeValue => scopeValue && typeof scopeValue === 'string'))) {
       throw new TypeError('Missing `scope` argument; a non-empty list of OAuth scopes must be provided');
     }
-    return `
-      https://www.${endpointDomain}/api/v1/authorize?
-      client_id=${encodeURIComponent(clientId)}
-      &response_type=code
-      &state=${encodeURIComponent(state)}
-      &redirect_uri=${encodeURIComponent(redirectUri)}
-      &duration=${permanent ? 'permanent' : 'temporary'}
-      &scope=${encodeURIComponent(scope.join(' '))}
-    `.replace(/\s/g, '');
+
+    if(mobile) {
+      return `
+        https://www.${endpointDomain}/api/v1/authorize.compact?
+        client_id=${encodeURIComponent(clientId)}
+        &response_type=code
+        &state=${encodeURIComponent(state)}
+        &redirect_uri=${encodeURIComponent(redirectUri)}
+        &duration=${permanent ? 'permanent' : 'temporary'}
+        &scope=${encodeURIComponent(scope.join(' '))}
+        `.replace(/\s/g, '');
+    } else {
+      return `
+        https://www.${endpointDomain}/api/v1/authorize?
+        client_id=${encodeURIComponent(clientId)}
+        &response_type=code
+        &state=${encodeURIComponent(state)}
+        &redirect_uri=${encodeURIComponent(redirectUri)}
+        &duration=${permanent ? 'permanent' : 'temporary'}
+        &scope=${encodeURIComponent(scope.join(' '))}
+        `.replace(/\s/g, '');
+    }
+    
   }
 
   /**
